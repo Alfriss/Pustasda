@@ -5,22 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard - Pustasda</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-[#F8FAFC] flex h-screen overflow-hidden antialiased text-gray-800">
+<body class="bg-[#F8FAFC] flex h-screen overflow-hidden antialiased text-gray-800" x-data="{ sidebarOpen: false }">
 
-    <aside class="w-[260px] border-r border-gray-200 flex flex-col justify-between shrink-0 bg-white relative">
+    <!-- Overlay untuk Sidebar di Mobile -->
+    <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false" class="fixed inset-0 bg-gray-800/50 z-40 md:hidden" x-cloak></div>
+
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="w-[260px] border-r border-gray-200 flex flex-col justify-between shrink-0 bg-white fixed md:relative z-50 h-full transition-transform duration-300 ease-in-out md:translate-x-0">
         <div>
-            <div class="h-[72px] flex items-center px-6">
+            <div class="h-[72px] flex items-center justify-between px-6 border-b border-gray-100 md:border-none">
                 <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 bg-rose-600 rounded-lg flex items-center justify-center text-white shadow-sm shadow-rose-500/20">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5v4.11l4.83 4.46V21h4.34v-9.43L19 7.11V3zm-2 3H7V5h10v1z"/></svg>
                     </div>
                     <span class="text-xl font-bold tracking-tight text-gray-900">Pustasda</span>
                 </div>
+                <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
 
             <div class="px-4 mt-4">
@@ -70,57 +78,58 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
         
-        <header class="h-[72px] flex items-center justify-between px-8 border-b border-gray-200 shrink-0 bg-white">
-            <div class="flex h-full gap-1">
-                <a href="/" class="flex items-center px-4 font-medium text-sm text-gray-400 hover:text-gray-600 transition">
-                    Beranda
+        <header class="h-[72px] flex items-center justify-between px-4 md:px-8 border-b border-gray-200 shrink-0 bg-white">
+            <div class="flex h-full items-center">
+                <button @click="sidebarOpen = true" class="md:hidden mr-3 text-gray-600 p-1.5 hover:bg-gray-100 rounded-md transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <a href="{{ url('/') }}" class="flex items-center px-3 md:px-4 font-semibold text-sm h-full border-b-2 transition {{ !request()->is('tentang') ? 'text-[#E11D48] border-[#E11D48]' : 'text-gray-400 hover:text-gray-700 border-transparent' }}">
+                    Dashboard
                 </a>
-                <a href="/tentang" class="flex items-center px-4 font-medium text-sm text-gray-400 hover:text-gray-600 transition">
+                <a href="{{ url('/tentang') }}" class="flex items-center px-3 md:px-4 font-semibold text-sm h-full border-b-2 transition {{ request()->is('tentang') ? 'text-[#E11D48] border-[#E11D48]' : 'text-gray-400 hover:text-gray-700 border-transparent' }}">
                     Tentang
                 </a>
             </div>
             
-            <div class="flex items-center gap-6">
-                <div class="relative w-48 sm:w-60">
+            <div class="flex items-center gap-3 md:gap-6">
+                <div class="relative w-40 sm:w-60">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
-                    <input type="text" placeholder="Cari sesuatu..." class="w-full pl-9 pr-4 py-1.5 bg-gray-100/80 border border-transparent rounded-lg text-xs font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gray-200 transition">
+                    <input type="text" placeholder="Cari sesuatu..." class="w-full pl-9 pr-4 py-1.5 md:py-2 bg-gray-100/80 border border-transparent rounded-lg text-xs font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gray-200 transition">
                 </div>
                 
-                <div class="flex items-center gap-3 border-l border-gray-200 pl-6">
-                    <div class="text-right">
-                        <h4 class="font-bold text-sm text-gray-900 leading-tight">Brahma Alfaris</h4>
-                        <p class="text-[11px] font-semibold text-rose-600 tracking-wider uppercase">Admin</p>
+                <a href="{{ url('/profile') }}" class="flex items-center gap-3 border-l border-gray-200 pl-4 md:pl-6 cursor-pointer hover:bg-gray-50 p-1.5 rounded-lg transition">
+                    <div class="text-right hidden sm:block">
+                        <div class="font-bold text-[15px] text-gray-900 leading-tight">Brahma Alfaris</div>
+                        <div class="text-[11px] font-bold text-[#E11D48] tracking-wide">ADMIN</div>
                     </div>
-                    <div class="w-9 h-9 bg-gray-200 rounded-full overflow-hidden border border-gray-200 shadow-sm">
-                        <svg class="w-full h-full text-gray-400 p-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                    </div>
-                </div>
+                    <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-sm">BA</div>
+                </a>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto px-8 py-8">
-            <div class="max-w-[1060px] mx-auto w-full">
+        <div class="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
+            <div class="w-full">
                 
                 <div class="mb-6">
                     <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Leaderboard</h1>
                 </div>
 
-                <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div class="flex items-start gap-4">
                         <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shrink-0 shadow-md shadow-indigo-500/10">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89l-.06-1.3C3 10.703 3.11 9.99 3.31 9.397zM6.93 11.3a11.393 11.393 0 011.986-.132c.55 0 1.08.039 1.584.114l-2.007.86a1 1 0 00-.787 0l-1.32-.566zM12 14.222c0 .242-.012.48-.034.716A8.91 8.91 0 0110 15.303c-1.13 0-2.207-.208-3.2-.582a1.1 1.1 0 01-.8-.94l-.06-1.3A1 1 0 017 11.41a10.36 10.36 0 013-.41c1.11 0 2.143.174 3 .483V14.22z"></path></svg>
                         </div>
                         <div>
-                            <h3 class="font-bold text-gray-900 text-[17px] tracking-tight">Leaderboard Siswa Berprestasi</h3>
+                            <h3 class="font-bold text-gray-900 text-[16px] sm:text-[17px] tracking-tight">Leaderboard Siswa Berprestasi</h3>
                             <p class="text-xs text-gray-400 mt-0.5">Dihitung berdasarkan prestasi yang diraih</p>
                         </div>
                     </div>
                     
-                    <div class="relative min-w-[210px]">
+                    <div class="relative w-full md:w-auto md:min-w-[210px]">
                         <select class="block w-full bg-white border border-gray-200 text-gray-700 py-2.5 pl-4 pr-10 rounded-xl leading-tight focus:outline-none focus:ring-2 focus:ring-rose-500/10 focus:border-rose-500 text-xs font-semibold appearance-none cursor-pointer shadow-sm hover:bg-gray-50 transition">
                             <option value="aktif_prestasi">Siswa Aktif & Berprestasi</option>
                             <option value="aktif">Siswa paling Aktif</option>
@@ -134,25 +143,25 @@
 
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
                             <thead>
                                 <tr class="bg-gray-50/70 border-b border-gray-200 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                                    <th class="py-4 px-6 text-center w-20">Rank</th>
-                                    <th class="py-4 px-6">Nama</th>
-                                    <th class="py-4 px-6">Sekolah</th>
-                                    <th class="py-4 px-6 text-center">Kontes Selesai</th>
-                                    <th class="py-4 px-6 text-right w-44">Total Poin</th>
+                                    <th class="py-4 px-4 sm:px-6 text-center w-16 sm:w-20">Rank</th>
+                                    <th class="py-4 px-4 sm:px-6">Nama</th>
+                                    <th class="py-4 px-4 sm:px-6 hidden sm:table-cell">Sekolah</th>
+                                    <th class="py-4 px-4 sm:px-6 text-center">Kontes</th>
+                                    <th class="py-4 px-4 sm:px-6 text-right w-32 sm:w-44">Total Poin</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 text-sm font-medium text-gray-700">
                                 
                                 <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-4 sm:px-6 text-center">
                                         <div class="w-7 h-7 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7zm0 4v1h6V6H7zm0 3v1h6V9H7zm0 3v1h6v-1H7z"></path></svg>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-4 sm:px-6">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden border border-gray-100 shrink-0">
                                                 <svg class="w-full h-full text-gray-400 p-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -160,26 +169,26 @@
                                             <span class="font-bold text-gray-900">Brahma Alfaris</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-500">SMK Telkom Sidoarjo</td>
-                                    <td class="py-4 px-6 text-center font-semibold">18</td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center justify-end gap-3">
+                                    <td class="py-4 px-4 sm:px-6 text-gray-500 hidden sm:table-cell">SMK Telkom Sidoarjo</td>
+                                    <td class="py-4 px-4 sm:px-6 text-center font-semibold">18</td>
+                                    <td class="py-4 px-4 sm:px-6">
+                                        <div class="flex items-center justify-end gap-2 sm:gap-3">
                                             <div class="flex items-center gap-1.5 font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg text-xs border border-amber-200/50">
                                                 <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                                 5000
                                             </div>
-                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-4 sm:px-6 text-center">
                                         <div class="w-7 h-7 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mx-auto shadow-sm">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-4 sm:px-6">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden border border-gray-100 shrink-0">
                                                 <svg class="w-full h-full text-gray-400 p-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -187,26 +196,26 @@
                                             <span class="font-bold text-gray-900">Ahmad Fauzi</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-500">SMK Telkom Sidoarjo</td>
-                                    <td class="py-4 px-6 text-center font-semibold">10</td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center justify-end gap-3">
+                                    <td class="py-4 px-4 sm:px-6 text-gray-500 hidden sm:table-cell">SMK Telkom Sidoarjo</td>
+                                    <td class="py-4 px-4 sm:px-6 text-center font-semibold">10</td>
+                                    <td class="py-4 px-4 sm:px-6">
+                                        <div class="flex items-center justify-end gap-2 sm:gap-3">
                                             <div class="flex items-center gap-1.5 font-bold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg text-xs border border-slate-200/50">
                                                 <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                                 3450
                                             </div>
-                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-4 sm:px-6 text-center">
                                         <div class="w-7 h-7 bg-amber-500/10 text-amber-700 rounded-full flex items-center justify-center mx-auto shadow-sm">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-4 sm:px-6">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden border border-gray-100 shrink-0">
                                                 <svg class="w-full h-full text-gray-400 p-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -214,22 +223,22 @@
                                             <span class="font-bold text-gray-900">Siti Aminah</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-500">SMK Telkom Sidoarjo</td>
-                                    <td class="py-4 px-6 text-center font-semibold">10</td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center justify-end gap-3">
+                                    <td class="py-4 px-4 sm:px-6 text-gray-500 hidden sm:table-cell">SMK Telkom Sidoarjo</td>
+                                    <td class="py-4 px-4 sm:px-6 text-center font-semibold">10</td>
+                                    <td class="py-4 px-4 sm:px-6">
+                                        <div class="flex items-center justify-end gap-2 sm:gap-3">
                                             <div class="flex items-center gap-1.5 font-bold text-amber-800 bg-amber-500/5 px-2.5 py-1 rounded-lg text-xs border border-amber-600/10">
                                                 <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                                 2000
                                             </div>
-                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="py-4 px-6 text-center text-xs font-bold text-gray-400">4</td>
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-4 sm:px-6 text-center text-xs font-bold text-gray-400">4</td>
+                                    <td class="py-4 px-4 sm:px-6">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden border border-gray-100 shrink-0">
                                                 <svg class="w-full h-full text-gray-400 p-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -237,22 +246,22 @@
                                             <span class="font-semibold text-gray-900">Rizky Ramadhan</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-500">SMK Telkom Sidoarjo</td>
-                                    <td class="py-4 px-6 text-center font-semibold">9</td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center justify-end gap-3">
+                                    <td class="py-4 px-4 sm:px-6 text-gray-500 hidden sm:table-cell">SMK Telkom Sidoarjo</td>
+                                    <td class="py-4 px-4 sm:px-6 text-center font-semibold">9</td>
+                                    <td class="py-4 px-4 sm:px-6">
+                                        <div class="flex items-center justify-end gap-2 sm:gap-3">
                                             <div class="flex items-center gap-1.5 font-semibold text-gray-600 bg-gray-50 px-2.5 py-1 rounded-lg text-xs border border-gray-200/50">
                                                 <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                                 2000
                                             </div>
-                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr class="hover:bg-gray-50/50 transition">
-                                    <td class="py-4 px-6 text-center text-xs font-bold text-gray-400">5</td>
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-4 sm:px-6 text-center text-xs font-bold text-gray-400">5</td>
+                                    <td class="py-4 px-4 sm:px-6">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden border border-gray-100 shrink-0">
                                                 <svg class="w-full h-full text-gray-400 p-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -260,15 +269,15 @@
                                             <span class="font-semibold text-gray-900">Dewi Lestari</span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6 text-gray-500">SMK Telkom Sidoarjo</td>
-                                    <td class="py-4 px-6 text-center font-semibold">3</td>
-                                    <td class="py-4 px-6">
-                                        <div class="flex items-center justify-end gap-3">
+                                    <td class="py-4 px-4 sm:px-6 text-gray-500 hidden sm:table-cell">SMK Telkom Sidoarjo</td>
+                                    <td class="py-4 px-4 sm:px-6 text-center font-semibold">3</td>
+                                    <td class="py-4 px-4 sm:px-6">
+                                        <div class="flex items-center justify-end gap-2 sm:gap-3">
                                             <div class="flex items-center gap-1.5 font-semibold text-gray-600 bg-gray-50 px-2.5 py-1 rounded-lg text-xs border border-gray-200/50">
                                                 <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm2-2a1 1 0 00-1 1v1h8V3a1 1 0 00-1-1H7z"></path></svg>
                                                 2000
                                             </div>
-                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            <svg class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                         </div>
                                     </td>
                                 </tr>

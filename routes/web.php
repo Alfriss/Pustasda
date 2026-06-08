@@ -7,3 +7,7 @@ Route::view('/pengaturan', 'pengaturan');
 Route::view('/eksplor', 'eksplor');
 Route::view('/disimpan', 'disimpan');
 Route::view('/leaderboard', 'leaderboard');
+Route::view('/profile', 'profile');
+Route::get('/tentang', function () {
+    return view('tentang');
+});
